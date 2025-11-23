@@ -5,19 +5,19 @@ channels:
   - defaults
 dependencies:
   - python=3.10
-  - pytorch           # Die Basis-Library
-  - cpuonly           # WICHTIG: Verhindert den Download von CUDA-Treibern
+  - pytorch
+  - cpuonly
   - pandas
   - numpy
   - scikit-learn
   - matplotlib
-  - notebook          # Damit ihr Jupyter Notebooks nutzen könnt
+  - notebook
   - pip
   - pip:
       - uni2ts        # Salesforce Moirai
       - timesfm       # Google TimesFM
       - gluonts       # Wichtig für Evaluation
-      - datasets      # Für den M4 Download
+      - datasetsforecast      # Für den M4 Download
       - git+https://github.com/amazon-science/chronos-forecasting.git
 
 #Ausführen mit conda env create -f environment.yml
