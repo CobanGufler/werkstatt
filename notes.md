@@ -41,6 +41,8 @@ Library *statsforecast* (hat z.B. MAPE, sMAPE, MASE...)
 
 oder
 
+github.com/SalesforceAIResearch/uni2ts
+
 uni2ts, ist state-of-the-art
 Offizielles Zuhause: Es ist die offizielle Bibliothek von Salesforce Research für ihre Moirai-Modelle (Moirai 1.0, 1.1 und das ganz neue 2.0).
 Unified Evaluation: PLUSPUNKT, Salesforce hat Code veröffentlicht, um TimesFM und Chronos einheitlich zu evaluieren.
