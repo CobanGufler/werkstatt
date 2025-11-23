@@ -38,4 +38,8 @@ andere Modelle: Chronos-Bolt oder Chronos-Classic, UniTS, PatchTST-ZS
 ##### Metriken
 
 Library *statsforecast* (hat z.B. MAPE, sMAPE, MASE...)
+oder
+uni2ts, ist state-of-the-art
+Offizielles Zuhause: Es ist die offizielle Bibliothek von Salesforce Research für ihre Moirai-Modelle (Moirai 1.0, 1.1 und das ganz neue 2.0).
+Unified Evaluation: Der größte Pluspunkt für euch ist, dass Salesforce dort bereits Code veröffentlicht hat, um TimesFM und Chronos (die Modelle von Google und Amazon) einheitlich zu evaluieren. Ihr müsst das Rad also nicht neu erfinden.
 
