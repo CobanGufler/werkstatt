@@ -3,7 +3,7 @@ import timesfm
 from uni2ts.model.moirai import MoiraiForecast
 from chronos import ChronosPipeline
 
-# Die kleinsten, CPU-freundlichsten Checkpoints
+# Die CPU-freundlichsten Checkpoints
 CHRONOS_CHECKPOINT = "amazon/chronos-t5-tiny"  # Amazon Chronos (ca. 8M Parameter)
 MOIRAI_CHECKPOINT = "Salesforce/moirai-1.0-R-small"  # Salesforce Moirai (kleinste Version)
 TIMESFM_CHECKPOINT = "google/timesfm-1.0-200m"  # Google TimesFM (kleinere Version)
@@ -25,8 +25,8 @@ class ModelFactory:
         # Chronos nutzt die HuggingFace Pipeline API
         pipeline = ChronosPipeline.from_pretrained(
             checkpoint,
-            device_map="cpu",  # WICHTIG: Erzwingt die Nutzung der CPU
-            torch_dtype=torch.float32,  # WICHTIG: Besser für CPU als bfloat16
+            device_map="cpu",
+            torch_dtype=torch.float32,
         )
         return pipeline
 
@@ -40,7 +40,7 @@ class ModelFactory:
         # Moirai ist in uni2ts integriert und nutzt die gluonts-Prediction-Struktur
         model = MoiraiForecast.load_from_checkpoint(
             checkpoint_path=checkpoint,
-            map_location="cpu"  # WICHTIG: Erzwingt die Nutzung der CPU
+            map_location="cpu"
         )
         return model
 
@@ -53,7 +53,7 @@ class ModelFactory:
 
         # TimesFM ist ein eigenständiges Python-Paket
         tfm = timesfm.TimesFm(
-            hparams=timesfm.TimesFmHparams(backend="cpu"),  # WICHTIG: Erzwingt die Nutzung der CPU
+            hparams=timesfm.TimesFmHparams(backend="cpu"),
             checkpoint=timesfm.TimesFmCheckpoint(huggingface_repo_id=checkpoint),
         )
         return tfm
