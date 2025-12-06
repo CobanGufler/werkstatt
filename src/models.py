@@ -6,7 +6,8 @@ from chronos import ChronosPipeline
 # Die CPU-freundlichsten Checkpoints
 CHRONOS_CHECKPOINT = "amazon/chronos-t5-tiny"
 MOIRAI_CHECKPOINT = "Salesforce/moirai-1.0-R-small"
-TIMESFM_CHECKPOINT = "google/timesfm-1.0-200m"
+TIMESFM_CHECKPOINT = "google/timesfm-1.0-200m-pytorch"
+
 
 
 class ModelFactory:
@@ -40,3 +41,5 @@ class ModelFactory:
             checkpoint=timesfm.TimesFmCheckpoint(huggingface_repo_id=checkpoint),
         )
         return tfm
+
+

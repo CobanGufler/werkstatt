@@ -1,15 +1,21 @@
 from datasetsforecast.m4 import M4
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
 
-DATA_DIR = "./data"
+DATA_DIR = "./data/m4/datasets"
 
 def load_m4_hourly():
     hourly_df, _, _ = M4.load(directory=DATA_DIR, group="Hourly")
     return hourly_df
 
 def load_m4_daily():
-    daily_df, _, _ = M4.load(directory=DATA_DIR, group="Daily")
-    return daily_df
+    daily_train, _, _ = M4.load(directory=DATA_DIR, group="Daily")
+    daily_train = daily_train.sort_values(["unique_id", "ds"])
+
+    daily_test = pd.read_csv(os.path.join(DATA_DIR, "Daily-test.csv"))
+
+    return daily_train, daily_test
 
 def load_m4_weekly():
     weekly_df, _, _ = M4.load(directory=DATA_DIR, group="Weekly")
@@ -44,5 +50,8 @@ def plot_example_series(data, n=5):
 
 
 if __name__ == "__main__":
-    df = load_m4_daily()
-    plot_example_series(df, n=7)
+    # daily data
+    df_train, df_test = load_m4_daily()
+    print(df_train.dtypes)
+    plot_example_series(df_train, n=7)
+
