@@ -10,12 +10,17 @@ def load_m4_hourly():
     return hourly_df
 
 def load_m4_daily():
-    daily_train, _, _ = M4.load(directory=DATA_DIR, group="Daily")
-    daily_train = daily_train.sort_values(["unique_id", "ds"])
 
-    daily_test = pd.read_csv(os.path.join(DATA_DIR, "Daily-test.csv"))
+    daily_full, _, _ = M4.load(directory=DATA_DIR, group="Daily")
+    daily_full = daily_full.sort_values(["unique_id", "ds"]).reset_index(drop=True)
 
-    return daily_train, daily_test
+    test_path = os.path.join(DATA_DIR, "Daily-test.csv")
+    if os.path.exists(test_path):
+        daily_test = pd.read_csv(test_path)
+    else:
+        daily_test = None
+
+    return daily_full, daily_test
 
 def load_m4_weekly():
     weekly_df, _, _ = M4.load(directory=DATA_DIR, group="Weekly")
