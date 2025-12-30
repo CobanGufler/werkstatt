@@ -61,3 +61,10 @@ Offizielles Zuhause: Es ist die offizielle Bibliothek von Salesforce Research f�
 Unified Evaluation: PLUSPUNKT, Salesforce hat Code veröffentlicht, um TimesFM und Chronos einheitlich zu evaluieren.
 hat MASE und sMAPE
 
+
+
+NOCH ZU ERLEDIGEN:
+Data Loader verursacht potentiell falsche Struktur
+Bei Chronos und Moirai überlegen welche num_samples, context length usw bei unterschiedlichen Frequenzen
+ADD: Quellen
+
