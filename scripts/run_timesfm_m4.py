@@ -15,6 +15,7 @@ from gluonts.itertools import batcher
 from src.data_load.m4_gluonts_loader import get_m4_test_dataset
 from src.eval.metrics import RunningMetrics
 
+torch.manual_seed(54)
 
 def load_timesfm_hf(checkpoint: str, device: str = "cpu"):
     # HF PyTorch checkpoint (wie du es bisher nutzt)

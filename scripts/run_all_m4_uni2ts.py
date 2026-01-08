@@ -22,6 +22,7 @@ from gluonts.ev.metrics import MSE, MAE, SMAPE, MASE, ND, NRMSE
 
 from src.data_load.m4_gluonts_loader import get_m4_test_dataset
 
+torch.manual_seed(54)
 
 SEASONALITY = {
     "hourly": 24,
@@ -152,7 +153,7 @@ def evaluate_chronos_m4_uni2ts(
     checkpoint: str,
     save_path: str,
     context_len: int = 512,
-    num_samples: int = 5,
+    num_samples: int = 20,
     batch_size: int = 256,
 ):
     print("-" * 5, f"Evaluating Chronos (uni2ts) on M4 {group}", "-" * 5)
@@ -225,7 +226,7 @@ def evaluate_moirai_m4_uni2ts(
     save_path: str,
     context_len: int = 512,
     num_samples: int = 20,
-    batch_size: int = 32,
+    batch_size: int = 256,
 ):
     print("-" * 5, f"Evaluating Moirai (uni2ts) on M4 {group}", "-" * 5)
 
@@ -304,8 +305,8 @@ if __name__ == "__main__":
 
     parser.add_argument("--context_len", type=int, default=512)
     parser.add_argument("--batch_size", type=int, default=256)
-    parser.add_argument("--chronos_samples", type=int, default=20)
-    parser.add_argument("--moirai_samples", type=int, default=100)
+    parser.add_argument("--chronos_samples", type=int, default=5)
+    parser.add_argument("--moirai_samples", type=int, default=5)
     parser.add_argument("--moirai_batch", type=int, default=32)
 
     args = parser.parse_args()

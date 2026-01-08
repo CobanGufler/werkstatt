@@ -16,6 +16,7 @@ from gluonts.itertools import batcher
 from src.data_load.m4_gluonts_loader import get_m4_test_dataset
 from src.eval.metrics import RunningMetrics
 
+torch.manual_seed(54)
 
 def maybe_truncate(x: np.ndarray, context_len: int) -> np.ndarray:
     if context_len is None or context_len <= 0:
