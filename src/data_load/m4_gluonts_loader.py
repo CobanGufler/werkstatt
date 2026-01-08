@@ -110,6 +110,13 @@ def get_m4_test_dataset(group: str, data_dir: str, start: str = "2000-01-01") ->
         series_items = _long_to_series_items(train_df, test_df)
 
     # Build ListDataset
+    if freq == "Y":
+        max_len = max(len(it["target"]) for it in series_items)
+        safe_end_year = 2262
+        min_year = 1700
+        start_year = max(min_year, safe_end_year - (max_len - 1))
+        start = f"{start_year}-01-01"
+
     start_period = pd.Period(start, freq=freq)
     ds = ListDataset(
         [{"item_id": it["item_id"], "start": start_period, "target": it["target"]} for it in series_items],
