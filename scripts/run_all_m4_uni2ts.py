@@ -305,9 +305,9 @@ if __name__ == "__main__":
 
     parser.add_argument("--context_len", type=int, default=512)
     parser.add_argument("--batch_size", type=int, default=256)
-    parser.add_argument("--chronos_samples", type=int, default=5)
-    parser.add_argument("--moirai_samples", type=int, default=5)
-    parser.add_argument("--moirai_batch", type=int, default=32)
+    parser.add_argument("--chronos_samples", type=int, default=10)
+    parser.add_argument("--moirai_samples", type=int, default=10)
+    parser.add_argument("--moirai_batch", type=int, default=256)
 
     args = parser.parse_args()
 
