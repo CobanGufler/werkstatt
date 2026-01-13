@@ -55,8 +55,8 @@ def main():
     args = parser.parse_args()
 
     groups = parse_groups(args.groups)
-    if len(groups) != 2:
-        raise ValueError(f"--groups must contain exactly 2 groups, got: {groups}")
+    if len(groups) < 1:
+        raise ValueError(f"Groups must be greater than 0")
 
     rng = np.random.default_rng(args.seed)
 
@@ -75,7 +75,18 @@ def main():
     })
 
     # Two plots under each other; make it larger in the saved file so text stays readable after downscaling.
-    fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(12, 8), constrained_layout=True)
+    n_groups = len(groups)
+
+    fig, axes = plt.subplots(
+        nrows=1,
+        ncols=n_groups,
+        figsize=(6 * n_groups, 6),
+        constrained_layout=True
+    )
+
+    # wichtig: bei nur einem Plot axes immer als Liste behandeln
+    if n_groups == 1:
+        axes = [axes]
 
     for ax_i, group in enumerate(groups):
         ax = axes[ax_i]
