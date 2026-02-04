@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 import pandas as pd
+import torch
 from tqdm.auto import tqdm
 
 import timesfm
