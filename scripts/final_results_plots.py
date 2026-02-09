@@ -192,6 +192,71 @@ def plot_1_base_models_mase(base_by_freq: Dict[str, pd.DataFrame], out_dir: str)
     )
 
 
+def plot_1_base_models_mase_with_naive2(
+    base_by_freq: Dict[str, pd.DataFrame],
+    naive2_csv: str,
+    out_dir: str,
+) -> None:
+    if not naive2_csv or not os.path.exists(naive2_csv):
+        return
+
+    naive_df = pd.read_csv(naive2_csv)
+    if "group" not in naive_df.columns or "MASE_Naive2" not in naive_df.columns:
+        return
+
+    # map group to lowercase for matching (results folders are lowercase)
+    naive_map = {
+        str(r["group"]).strip().lower(): float(r["MASE_Naive2"])
+        for _, r in naive_df.iterrows()
+        if pd.notna(r.get("MASE_Naive2", np.nan))
+    }
+
+    rows = []
+    for freq, df in base_by_freq.items():
+        keep = df[df["model_name"].isin(["TimesFM", "Chronos Base", "Moirai Base", "Chronos", "Moirai"])]
+        keep = keep.copy()
+        keep.loc[keep["model_name"] == "Chronos", "model_name"] = "Chronos Base"
+        keep.loc[keep["model_name"] == "Moirai", "model_name"] = "Moirai Base"
+        for _, r in keep.iterrows():
+            rows.append({"freq": freq, "model": r["model_name"], "MASE": float(r["MASE"])})
+
+    data = pd.DataFrame(rows)
+    if data.empty:
+        return
+
+    plt.figure(figsize=(11, 5))
+
+    x_vals = list(dict.fromkeys(data["freq"].tolist()))
+    series_vals = ["TimesFM", "Chronos Base", "Moirai Base"]
+    x = np.arange(len(x_vals))
+    width = 0.8 / max(len(series_vals), 1)
+
+    for i, s in enumerate(series_vals):
+        sub = data[data["model"] == s].set_index("freq")
+        ys = [sub.loc[v, "MASE"] if v in sub.index else np.nan for v in x_vals]
+        plt.bar(x + (i - (len(series_vals) - 1) / 2) * width, ys, width=width, label=s)
+
+    # Naive2 reference lines per frequency
+    for j, f in enumerate(x_vals):
+        nv = naive_map.get(str(f).strip().lower(), np.nan)
+        if np.isfinite(nv):
+            x0 = x[j] - 0.45
+            x1 = x[j] + 0.45
+            plt.plot([x0, x1], [nv, nv], color="red", linewidth=2, label="_nolegend_")
+
+    # legend entry for Naive2
+    plt.plot([], [], color="red", linewidth=2, label="Naive2")
+
+    plt.xticks(x, x_vals)
+    plt.title("(1) Base Modelle – MASE Vergleich + Naive2 Referenz")
+    plt.ylabel("MASE (lower = better)")
+    plt.grid(axis="y", alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, "01_base_models_MASE_with_naive2.png"), dpi=200)
+    plt.close()
+
+
 def plot_2_chronos_tiny_vs_base(
     base_by_freq: Dict[str, pd.DataFrame],
     small_by_freq: Dict[str, pd.DataFrame],
@@ -420,6 +485,12 @@ def main():
     ap.add_argument("--base_dir", type=str, required=True, help="Path to results_final_base")
     ap.add_argument("--small_dir", type=str, required=True, help="Path to results_final_small")
     ap.add_argument("--out_dir", type=str, default="plots_final", help="Output folder for PNGs")
+    ap.add_argument(
+        "--naive2_csv",
+        type=str,
+        default=os.path.join("owa_naive2_uni2ts", "naive2_metrics_per_group_uni2ts.csv"),
+        help="Naive2 metrics CSV for reference lines",
+    )
     args = ap.parse_args()
 
     _ensure_outdir(args.out_dir)
@@ -429,6 +500,7 @@ def main():
 
     # 1
     plot_1_base_models_mase(base_by_freq, args.out_dir)
+    plot_1_base_models_mase_with_naive2(base_by_freq, args.naive2_csv, args.out_dir)
 
     # 2
     plot_2_chronos_tiny_vs_base(base_by_freq, small_by_freq, args.out_dir)
