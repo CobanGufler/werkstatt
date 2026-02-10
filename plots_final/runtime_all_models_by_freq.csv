@@ -1,0 +1,31 @@
+freq,model,time,source
+Hourly,TimesFM,43.3210244178772,base
+Hourly,Chronos Base,626.0333120822906,base
+Hourly,Moirai Base,57.92528939247131,base
+Hourly,Chronos Tiny,54.1194920539856,small
+Hourly,Moirai Small,20.79085612297058,small
+Daily,TimesFM,419.297420501709,base
+Daily,Chronos Base,3446.1479160785675,base
+Daily,Moirai Base,554.9501492977142,base
+Daily,Chronos Tiny,259.8769233226776,small
+Daily,Moirai Small,196.80602264404297,small
+Weekly,TimesFM,38.73584866523743,base
+Weekly,Chronos Base,289.9249200820923,base
+Weekly,Moirai Base,47.20035338401794,base
+Weekly,Chronos Tiny,20.25226712226868,small
+Weekly,Moirai Small,17.138895511627197,small
+Monthly,TimesFM,4803.128144264221,base
+Monthly,Chronos Base,27272.890239953995,base
+Monthly,Moirai Base,6225.532006263733,base
+Monthly,Chronos Tiny,2341.797766685486,small
+Monthly,Moirai Small,2273.382481098175,small
+Quarterly,TimesFM,2310.2978653907776,base
+Quarterly,Chronos Base,6256.354277610779,base
+Quarterly,Moirai Base,3112.554338693619,base
+Quarterly,Chronos Tiny,466.05449390411377,small
+Quarterly,Moirai Small,1137.596064567566,small
+Yearly,TimesFM,2199.6818759441376,base
+Yearly,Chronos Base,2591.7115852832794,base
+Yearly,Moirai Base,2923.3330612182617,base
+Yearly,Chronos Tiny,202.90235233306885,small
+Yearly,Moirai Small,1088.9679758548737,small
