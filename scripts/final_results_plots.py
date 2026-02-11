@@ -12,6 +12,13 @@ import matplotlib.pyplot as plt
 
 
 FREQ_ORDER = ["Hourly", "Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]
+_FREQ_MAP = {f.lower(): f for f in FREQ_ORDER}
+
+
+def _normalize_freq(label: str) -> str:
+    s = str(label).strip()
+    key = s.lower()
+    return _FREQ_MAP.get(key, s)
 
 
 def _latest_all_csv(freq_dir: str) -> Optional[str]:
@@ -110,8 +117,9 @@ def _read_results_by_freq(results_root: str) -> Dict[str, pd.DataFrame]:
         df = pd.read_csv(csv_path)
         df = _standardize_df(df)
         df["model_name"] = df["model_id"].apply(_pretty_model_name)
-        df["freq"] = freq
-        out[freq] = df
+        norm_freq = _normalize_freq(freq)
+        df["freq"] = norm_freq
+        out[norm_freq] = df
 
     # keep only known order if possible
     ordered = {}
@@ -137,10 +145,16 @@ def _grouped_bar(
     ylabel: str,
     out_path: str,
     series_order: Optional[List[str]] = None,
+    x_order: Optional[List[str]] = None,
 ) -> None:
     plt.figure(figsize=(11, 5))
 
-    x_vals = list(dict.fromkeys(data[x_col].tolist()))
+    if x_order is not None:
+        present = set(data[x_col].tolist())
+        x_vals = [x for x in x_order if x in present]
+        x_vals += [x for x in list(dict.fromkeys(data[x_col].tolist())) if x not in set(x_vals)]
+    else:
+        x_vals = list(dict.fromkeys(data[x_col].tolist()))
     if series_order is None:
         series_vals = sorted(data[series_col].unique().tolist())
     else:
@@ -189,6 +203,7 @@ def plot_1_base_models_mase(base_by_freq: Dict[str, pd.DataFrame], out_dir: str)
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "01_base_models_MASE.png"),
         series_order=["TimesFM", "Chronos Base", "Moirai Base"],
+        x_order=FREQ_ORDER,
     )
 
 
@@ -226,7 +241,9 @@ def plot_1_base_models_mase_with_naive2(
 
     plt.figure(figsize=(11, 5))
 
-    x_vals = list(dict.fromkeys(data["freq"].tolist()))
+    present = set(data["freq"].tolist())
+    x_vals = [x for x in FREQ_ORDER if x in present]
+    x_vals += [x for x in list(dict.fromkeys(data["freq"].tolist())) if x not in set(x_vals)]
     series_vals = ["TimesFM", "Chronos Base", "Moirai Base"]
     x = np.arange(len(x_vals))
     width = 0.8 / max(len(series_vals), 1)
@@ -311,6 +328,7 @@ def plot_2_chronos_tiny_vs_base(
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "02_chronos_tiny_vs_base_MASE.png"),
         series_order=["Chronos Tiny", "Chronos Base"],
+        x_order=FREQ_ORDER,
     )
 
     # runtime plot (only if there is any non-nan)
@@ -324,6 +342,7 @@ def plot_2_chronos_tiny_vs_base(
             ylabel="Runtime (seconds)",
             out_path=os.path.join(out_dir, "02_chronos_tiny_vs_base_runtime.png"),
             series_order=["Chronos Tiny", "Chronos Base"],
+            x_order=FREQ_ORDER,
         )
 
 
@@ -380,6 +399,7 @@ def plot_3_moirai_small_vs_base(
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "03_moirai_small_vs_base_MASE.png"),
         series_order=["Moirai Small", "Moirai Base"],
+        x_order=FREQ_ORDER,
     )
 
     if dt["time"].notna().any():
@@ -392,6 +412,7 @@ def plot_3_moirai_small_vs_base(
             ylabel="Runtime (seconds)",
             out_path=os.path.join(out_dir, "03_moirai_small_vs_base_runtime.png"),
             series_order=["Moirai Small", "Moirai Base"],
+            x_order=FREQ_ORDER,
         )
 
 
