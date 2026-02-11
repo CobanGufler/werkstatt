@@ -153,7 +153,7 @@ def plot_components_vs_naive2(df: pd.DataFrame, out_dir: str) -> None:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", type=str, default="owa_naive2_uni2ts", help="Input folder")
-    ap.add_argument("--out_dir", type=str, default="plots_final/owa_naive2", help="Output folder")
+    ap.add_argument("--out_dir", type=str, default="plots/owa", help="Output folder")
     args = ap.parse_args()
 
     root = Path(args.root)

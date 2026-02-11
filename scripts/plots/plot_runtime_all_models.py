@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import os
@@ -101,7 +101,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base_dir", type=str, required=True)
     ap.add_argument("--small_dir", type=str, required=True)
-    ap.add_argument("--out_dir", type=str, default="plots_final")
+    ap.add_argument("--out_dir", type=str, default="plots/final")
     ap.add_argument("--out_csv", type=str, default="runtime_all_models_by_freq.csv")
     ap.add_argument("--out_png", type=str, default="runtime_all_models_by_freq.png")
     args = ap.parse_args()

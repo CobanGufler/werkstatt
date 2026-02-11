@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import os
@@ -246,7 +246,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("--data_dir", type=str, required=True)
-    parser.add_argument("--save_dir", type=str, default="plots_m4")
+    parser.add_argument("--save_dir", type=str, default="plots/m4")
     parser.add_argument("--run_name", type=str, default="uni2ts_variants")
 
     parser.add_argument("--series_index", type=int, default=0)

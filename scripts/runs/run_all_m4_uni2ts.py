@@ -1,4 +1,4 @@
-# run_all_m4_uni2ts.py
+﻿# run_all_m4_uni2ts.py
 from __future__ import annotations
 
 import argparse
@@ -20,7 +20,7 @@ from uni2ts.eval_util.evaluation import evaluate_forecasts
 from uni2ts.model.moirai import MoiraiForecast, MoiraiModule
 from gluonts.ev.metrics import MSE, MAE, SMAPE, MASE, ND, NRMSE
 
-from src.data_load.m4_gluonts_loader import get_m4_test_dataset
+from scripts.data_load.m4_gluonts_loader import get_m4_test_dataset
 
 torch.manual_seed(54)
 

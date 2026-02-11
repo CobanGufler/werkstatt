@@ -1,11 +1,11 @@
-import argparse
+﻿import argparse
 import os
 from typing import Dict, List
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.data_load.m4_gluonts_loader import get_m4_test_dataset
+from scripts.data_load.m4_gluonts_loader import get_m4_test_dataset
 
 
 CANONICAL_GROUPS = {

@@ -1,4 +1,4 @@
-# run_moirai_m4.py
+﻿# run_moirai_m4.py
 from __future__ import annotations
 
 import argparse
@@ -14,7 +14,7 @@ from gluonts.dataset.common import ListDataset
 
 from uni2ts.model.moirai import MoiraiForecast, MoiraiModule
 
-from src.data_load.m4_gluonts_loader import get_m4_test_dataset
+from scripts.data_load.m4_gluonts_loader import get_m4_test_dataset
 from src.eval.metrics import RunningMetrics
 
 torch.manual_seed(54)

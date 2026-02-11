@@ -1,4 +1,4 @@
-# scripts/plot_results_final.py
+﻿# scripts/plot_results_final.py
 from __future__ import annotations
 
 import argparse
@@ -199,7 +199,7 @@ def plot_1_base_models_mase(base_by_freq: Dict[str, pd.DataFrame], out_dir: str)
         x_col="freq",
         series_col="model",
         y_col="MASE",
-        title="(1) Base Modelle – MASE Vergleich über alle Frequenzen",
+        title="(1) Base Modelle â€“ MASE Vergleich Ã¼ber alle Frequenzen",
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "01_base_models_MASE.png"),
         series_order=["TimesFM", "Chronos Base", "Moirai Base"],
@@ -265,7 +265,7 @@ def plot_1_base_models_mase_with_naive2(
     plt.plot([], [], color="red", linewidth=2, label="Naive2")
 
     plt.xticks(x, x_vals)
-    plt.title("(1) Base Modelle – MASE Vergleich + Naive2 Referenz")
+    plt.title("(1) Base Modelle â€“ MASE Vergleich + Naive2 Referenz")
     plt.ylabel("MASE (lower = better)")
     plt.grid(axis="y", alpha=0.3)
     plt.legend()
@@ -324,7 +324,7 @@ def plot_2_chronos_tiny_vs_base(
         x_col="freq",
         series_col="model",
         y_col="MASE",
-        title="(2) Chronos Tiny vs Base – MASE Vergleich über alle Frequenzen",
+        title="(2) Chronos Tiny vs Base â€“ MASE Vergleich Ã¼ber alle Frequenzen",
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "02_chronos_tiny_vs_base_MASE.png"),
         series_order=["Chronos Tiny", "Chronos Base"],
@@ -338,7 +338,7 @@ def plot_2_chronos_tiny_vs_base(
             x_col="freq",
             series_col="model",
             y_col="time",
-            title="(2) Chronos Tiny vs Base – Laufzeit (total_time_eval) über alle Frequenzen",
+            title="(2) Chronos Tiny vs Base â€“ Laufzeit (total_time_eval) Ã¼ber alle Frequenzen",
             ylabel="Runtime (seconds)",
             out_path=os.path.join(out_dir, "02_chronos_tiny_vs_base_runtime.png"),
             series_order=["Chronos Tiny", "Chronos Base"],
@@ -395,7 +395,7 @@ def plot_3_moirai_small_vs_base(
         x_col="freq",
         series_col="model",
         y_col="MASE",
-        title="(3) Moirai Small vs Base – MASE Vergleich über alle Frequenzen",
+        title="(3) Moirai Small vs Base â€“ MASE Vergleich Ã¼ber alle Frequenzen",
         ylabel="MASE (lower = better)",
         out_path=os.path.join(out_dir, "03_moirai_small_vs_base_MASE.png"),
         series_order=["Moirai Small", "Moirai Base"],
@@ -408,7 +408,7 @@ def plot_3_moirai_small_vs_base(
             x_col="freq",
             series_col="model",
             y_col="time",
-            title="(3) Moirai Small vs Base – Laufzeit (total_time_eval) über alle Frequenzen",
+            title="(3) Moirai Small vs Base â€“ Laufzeit (total_time_eval) Ã¼ber alle Frequenzen",
             ylabel="Runtime (seconds)",
             out_path=os.path.join(out_dir, "03_moirai_small_vs_base_runtime.png"),
             series_order=["Moirai Small", "Moirai Base"],
@@ -474,7 +474,7 @@ def plot_4_base_score_mase_smape(base_by_freq: Dict[str, pd.DataFrame], out_dir:
     # bar plot
     plt.figure(figsize=(9, 4.8))
     plt.bar(overall["model"], overall["score"])
-    plt.title("(4) Base Modelle – Composite Score (MASE & sMAPE, min-max je Frequenz)")
+    plt.title("(4) Base Modelle â€“ Composite Score (MASE & sMAPE, min-max je Frequenz)")
     plt.ylabel("Score (lower = better)")
     plt.grid(axis="y", alpha=0.3)
     plt.tight_layout()
@@ -495,7 +495,7 @@ def plot_4_base_score_mase_smape(base_by_freq: Dict[str, pd.DataFrame], out_dir:
         loc="center",
     )
     tbl.scale(1, 1.4)
-    ax.set_title("Base Modelle – Score pro Frequenz (0=best innerhalb Frequenz)")
+    ax.set_title("Base Modelle â€“ Score pro Frequenz (0=best innerhalb Frequenz)")
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, "04_base_models_score_per_freq_table.png"), dpi=200)
     plt.close()
@@ -505,7 +505,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base_dir", type=str, required=True, help="Path to results_final_base")
     ap.add_argument("--small_dir", type=str, required=True, help="Path to results_final_small")
-    ap.add_argument("--out_dir", type=str, default="plots_final", help="Output folder for PNGs")
+    ap.add_argument("--out_dir", type=str, default="plots/final", help="Output folder for PNGs")
     ap.add_argument(
         "--naive2_csv",
         type=str,
