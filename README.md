@@ -2,6 +2,10 @@
 
 Repo für die AI Werkstatt (M4 Forecasting mit uni2ts Modellen).
 
+**Authors**
+- Berkan Coban
+- Magdalena Gufler
+
 **Struktur**
 - `plots/`: Alle Plots an einem Ort (Unterordner `final/`, `m4/`, `owa/`).
 - `scripts/plots/`: Plot-Skripte.
