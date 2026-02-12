@@ -1,4 +1,7 @@
-﻿# run_chronos_m4.py
+﻿# Adapted from the official Chronos implementation (amazon-science/chronos-forecasting).
+# License: see model card for amazon/chronos-t5-tiny and amazon/chronos-t5-tiny
+# Modifications: integrated into our unified M4 evaluation pipeline.
+
 from __future__ import annotations
 
 import argparse
@@ -67,7 +70,7 @@ def evaluate_chronos_m4(
             prediction_length=h,
             num_samples=num_samples,
             limit_prediction_length=False,
-        ).numpy()  # (bs, num_samples, h) typically
+        ).numpy()
 
         # point forecast: median over samples
         yhat = np.median(samples, axis=1)  # (bs, h)

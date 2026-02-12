@@ -1,4 +1,8 @@
-﻿# run_timesfm_m4.py
+﻿# Adapted from the official TimesFM implementation (google-research/timesfm).
+# License: see model card for google/timesfm-1.0-200m-pytorch
+# Modifications: integrated into our unified M4 evaluation pipeline.
+
+
 from __future__ import annotations
 
 import argparse
@@ -19,7 +23,7 @@ from src.eval.metrics import RunningMetrics
 torch.manual_seed(54)
 
 def load_timesfm_hf(checkpoint: str, device: str = "cpu"):
-    # HF PyTorch checkpoint (wie du es bisher nutzt)
+
     tfm = timesfm.TimesFm(
         hparams=timesfm.TimesFmHparams(backend=device),
         checkpoint=timesfm.TimesFmCheckpoint(huggingface_repo_id=checkpoint),
@@ -55,15 +59,13 @@ def evaluate_timesfm_m4(
     inputs = list(test_data.input)
     labels = list(test_data.label)
 
-    # Weâ€™ll predict batch-wise, using forecast_on_df per batch.
-    # We build a small DF per batch (only context_len points per series).
     metrics = RunningMetrics()
 
     start_time = time.time()
     for in_batch, lb_batch in tqdm(zip(batcher(inputs, batch_size=batch_size),
                                        batcher(labels, batch_size=batch_size)),
                                   total=(len(inputs) + batch_size - 1) // batch_size):
-        # Build batch input df
+
         rows = []
         uid_order = []
         for entry in in_batch:
@@ -78,7 +80,7 @@ def evaluate_timesfm_m4(
 
         inp_df = pd.DataFrame(rows, columns=["unique_id", "ds", "y"])
 
-        # Forecast
+
         pred_df = model.forecast_on_df(
             inputs=inp_df,
             freq=metadata.freq,
@@ -90,7 +92,6 @@ def evaluate_timesfm_m4(
         val_cols = [c for c in pred_df.columns if c not in ("unique_id", "ds")]
         col = "timesfm" if "timesfm" in val_cols else val_cols[0]
 
-        # Align predictions to batch order
         yhat = np.stack(
             [
                 pred_df[pred_df["unique_id"] == uid][col].to_numpy(dtype=float)[:h]

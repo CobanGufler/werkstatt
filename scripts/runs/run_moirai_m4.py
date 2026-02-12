@@ -1,4 +1,7 @@
-﻿# run_moirai_m4.py
+﻿# Adapted from the official Moirai implementation (SalesforceAIResearch/uni2ts).
+# License: see model card for Salesforce/moirai-1.0-R-small and Salesforce/moirai-1.0-R-small
+# Modifications: integrated into our unified M4 evaluation pipeline.
+
 from __future__ import annotations
 
 import argparse
@@ -65,7 +68,7 @@ def evaluate_moirai_m4(
     inputs = list(test_data.input)
     labels = list(test_data.label)
 
-    # Build ListDataset from history-only inputs and keep the corresponding (truncated) insample arrays
+    # Build ListDataset from history-only inputs
     start_time = time.time()
     ds_items = []
     insample_list: list[np.ndarray] = []
@@ -99,11 +102,11 @@ def evaluate_moirai_m4(
     forecasts = predictor.predict(ds)
 
     for i, (fcst, lb) in enumerate(tqdm(zip(forecasts, labels), total=len(labels))):
-        # fcst.samples: (num_samples, h)
-        yhat = np.median(fcst.samples, axis=0)[None, :]  # (1, h)
-        ytrue = np.asarray(lb["target"], dtype=float)[None, :]  # (1, h)
 
-        insample = insample_list[i][None, :]  # (1, context_len_truncated)
+        yhat = np.median(fcst.samples, axis=0)[None, :]
+        ytrue = np.asarray(lb["target"], dtype=float)[None, :]
+
+        insample = insample_list[i][None, :]
 
         metrics.update(yhat, ytrue)
         metrics.update_mase(yhat, ytrue, insample=insample, m=m)

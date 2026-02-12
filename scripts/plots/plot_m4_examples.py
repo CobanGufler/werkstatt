@@ -63,9 +63,8 @@ def main():
     out_dir = os.path.join(args.save_dir, args.run_name, "plots")
     os.makedirs(out_dir, exist_ok=True)
 
-    # ---------- IMPORTANT: increase fonts for IEEE single-column scaling ----------
     plt.rcParams.update({
-        "font.size": 16,          # base font
+        "font.size": 16,
         "axes.titlesize": 18,
         "axes.labelsize": 16,
         "xtick.labelsize": 14,
@@ -74,7 +73,6 @@ def main():
         "lines.linewidth": 2.2,
     })
 
-    # Two plots under each other; make it larger in the saved file so text stays readable after downscaling.
     n_groups = len(groups)
 
     fig, axes = plt.subplots(
@@ -84,7 +82,6 @@ def main():
         constrained_layout=True
     )
 
-    # wichtig: bei nur einem Plot axes immer als Liste behandeln
     if n_groups == 1:
         axes = [axes]
 
@@ -102,7 +99,6 @@ def main():
         y_hist = np.asarray(in_entry["target"], dtype=float)
         y_test = np.asarray(lb_entry["target"], dtype=float)
 
-        # truncate history for plotting (keep most recent)
         if args.history_max and args.history_max > 0 and len(y_hist) > args.history_max:
             y_hist_plot = y_hist[-args.history_max:]
         else:
@@ -112,30 +108,23 @@ def main():
         x_hist = np.arange(split)
         x_test = np.arange(split, split + len(y_test))
 
-        # Plot history
         ax.plot(x_hist, y_hist_plot, label="History")
 
-        # Connect history and test segment visually
         x_test_conn = np.concatenate(([x_hist[-1]], x_test))
         y_test_conn = np.concatenate(([y_hist_plot[-1]], y_test))
         ax.plot(x_test_conn, y_test_conn, label="Test (ground truth)")
 
-        # Split marker
         ax.axvline(split - 1, linestyle="--", linewidth=2)
 
-        # Keep title short (titles get tiny in IEEE)
         ax.set_title(f"{DISPLAY_NAMES.get(group, group)} example")
         ax.set_ylabel("Value")
 
-        # Less clutter: show x-label only on bottom plot
         if ax_i == 1:
             ax.set_xlabel("Time index")
 
-        # Legend only once
         if ax_i == 0:
             ax.legend(loc="upper left", frameon=True)
 
-        # Optional: fewer ticks (cleaner & more readable)
         ax.tick_params(axis="both", which="major", length=6, width=1.5)
 
     safe_groups = "_".join([g.lower() for g in groups])

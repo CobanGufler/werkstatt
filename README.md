@@ -31,7 +31,28 @@ python -m scripts.runs.run_all_m4_uni2ts_minmax --group Daily --data_dir .\data\
 ```
 
 **References**
-- M4 Dataset
-- TimesFM
-- Chronos
-- Moirai
+
+M4 Dataset
+Makridakis et al. (M4 Competition)
+Usage: benchmark dataset with six frequency groups and fixed horizons
+
+TimesFM
+Checkpoints: google/timesfm-1.0-200m-pytorch (Hugging Face)
+Reference: Das et al. (TimesFM)
+License: see the model card on Hugging Face
+Usage: deterministic point forecasts (no sampling) in our evaluation
+
+Chronos
+Checkpoints: amazon/chronos-t5-tiny, amazon/chronos-t5-base (Hugging Face)
+Reference: Ansari et al. (Chronos)
+License: see the respective model cards on Hugging Face
+Usage: probabilistic forecasts (sampling); we aggregate samples via the median for point-metric evaluation
+
+Moirai
+Checkpoints: Salesforce/moirai-1.0-R-small, Salesforce/moirai-1.0-R-base (Hugging Face)
+Reference: Liu et al. (Moirai)
+License: see the respective model cards on Hugging Face
+Usage: probabilistic forecasts (sampling); we aggregate samples via the median for point-metric evaluation
+
+ChatGPT was used as a supporting tool while drafting and refining parts of the plotting scripts (scripts/plots). 
+All code was reviewed and adapted by the authors.

@@ -40,7 +40,6 @@ FREQ_ORDER = ["Hourly", "Daily", "Weekly", "Monthly", "Quarterly", "Yearly"]
 
 
 def canon_group(g: str) -> str:
-    """Make group keys consistent: 'daily'/'Daily' -> 'Daily'."""
     s = str(g).strip()
     if not s:
         return s
@@ -72,11 +71,7 @@ def _pred_start(entry: dict) -> pd.Period:
 
 
 def naive2_forecast(y: np.ndarray, h: int, m: Optional[int]) -> np.ndarray:
-    """
-    M4-style Naive2 (operationally Seasonal Naive):
-      - m <= 1: repeat last value
-      - m  > 1: repeat last m values (last season), tiled to horizon h
-    """
+
     y = np.asarray(y, dtype=float)
     if len(y) == 0:
         return np.zeros(h, dtype=float)
@@ -238,7 +233,6 @@ def main():
     args = ap.parse_args()
     os.makedirs(args.out_dir, exist_ok=True)
 
-    # 1) Naive2 per group
     naive_rows = []
     for g in FREQ_ORDER:
         save_path = os.path.join(
@@ -254,7 +248,6 @@ def main():
             batch_size=args.batch_size,
         )
 
-        # Extract MASE/sMAPE columns robustly
         df0 = df.reset_index(drop=True)
         mase_col = _find_col(df0, ["MASE[0.5]", "MASE"])
         smape_col = _find_col(df0, ["sMAPE[0.5]", "SMAPE"])
@@ -273,10 +266,8 @@ def main():
     naive_df = pd.DataFrame(naive_rows)
     naive_df.to_csv(os.path.join(args.out_dir, "naive2_metrics_per_group_uni2ts.csv"), index=False)
 
-    # 2) Base results
     base_df = read_base_all_results(args.results_base_dir)
 
-    # 3) Merge + sanity check
     merged = base_df.merge(naive_df, on="group", how="left")
 
     missing = merged[merged["MASE_Naive2"].isna() | merged["sMAPE_Naive2"].isna()]["group"].unique().tolist()
@@ -293,7 +284,6 @@ def main():
     )
     merged.to_csv(os.path.join(args.out_dir, "owa_per_group_and_model.csv"), index=False)
 
-    # 4) Weighted overall OWA
     overall_rows = []
     for model, g in merged.groupby("model", sort=False):
         weights = np.array([float(FREQ_WEIGHTS.get(grp, 1.0)) for grp in g["group"].tolist()], dtype=float)

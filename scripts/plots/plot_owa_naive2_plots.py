@@ -121,7 +121,6 @@ def plot_components_vs_naive2(df: pd.DataFrame, out_dir: str) -> None:
     df = df[df["model"].isin(MODEL_ORDER)]
     df["group"] = pd.Categorical(df["group"], categories=FREQ_ORDER, ordered=True)
 
-    # MASE ratio and sMAPE ratio (model / naive2)
     df["MASE_ratio"] = df["MASE"] / df["MASE_Naive2"]
     df["sMAPE_ratio"] = df["sMAPE"] / df["sMAPE_Naive2"]
 

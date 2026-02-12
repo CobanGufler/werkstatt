@@ -1,5 +1,4 @@
-﻿# scripts/plot_results_final.py
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import argparse
 import os
@@ -42,7 +41,7 @@ def _find_metric_col(df: pd.DataFrame, candidates: List[str]) -> Optional[str]:
 
 
 def _standardize_df(df: pd.DataFrame) -> pd.DataFrame:
-    # First column is model id (often "Unnamed: 0" from your ALL csv)
+    # First column is model id
     if "Unnamed: 0" in df.columns:
         df = df.rename(columns={"Unnamed: 0": "model_id"})
     elif df.columns[0] != "model_id":
@@ -70,17 +69,13 @@ def _standardize_df(df: pd.DataFrame) -> pd.DataFrame:
 def _pretty_model_name(model_id: str) -> str:
     s = str(model_id).lower()
 
-    # handle chronos tiny/base; moirai small/base; timesfm (single)
     if "timesfm" in s:
         return "TimesFM"
     if "chronos" in s:
-        # heuristics for tiny/base
         if "tiny" in s:
             return "Chronos Tiny"
         if "base" in s:
             return "Chronos Base"
-        # fallback: if you only have base in results_final_base and tiny in results_final_small,
-        # infer by folder usage in calling functions; keep generic here:
         return "Chronos"
     if "moirai" in s:
         if "small" in s:
@@ -92,16 +87,7 @@ def _pretty_model_name(model_id: str) -> str:
 
 
 def _read_results_by_freq(results_root: str) -> Dict[str, pd.DataFrame]:
-    """
-    Expects:
-      results_root/
-        Daily/
-          ALL_m4_*.csv
-        Hourly/
-          ALL_m4_*.csv
-        ...
-    Returns dict[freq] = standardized df with columns: model_id, MASE, sMAPE, time
-    """
+
     out: Dict[str, pd.DataFrame] = {}
     if not os.path.isdir(results_root):
         raise FileNotFoundError(f"Not a directory: {results_root}")
@@ -183,7 +169,7 @@ def plot_1_base_models_mase(base_by_freq: Dict[str, pd.DataFrame], out_dir: str)
     rows = []
     for freq, df in base_by_freq.items():
         keep = df[df["model_name"].isin(["TimesFM", "Chronos Base", "Moirai Base", "Chronos", "Moirai"])]
-        # If base files don't explicitly say "Base" in model_name, map Chronos->Chronos Base, Moirai->Moirai Base
+
         keep = keep.copy()
         keep.loc[keep["model_name"] == "Chronos", "model_name"] = "Chronos Base"
         keep.loc[keep["model_name"] == "Moirai", "model_name"] = "Moirai Base"
@@ -219,7 +205,6 @@ def plot_1_base_models_mase_with_naive2(
     if "group" not in naive_df.columns or "MASE_Naive2" not in naive_df.columns:
         return
 
-    # map group to lowercase for matching (results folders are lowercase)
     naive_map = {
         str(r["group"]).strip().lower(): float(r["MASE_Naive2"])
         for _, r in naive_df.iterrows()
@@ -298,9 +283,7 @@ def plot_2_chronos_tiny_vs_base(
         tiny_mase = tiny_time = None
         if df_s is not None:
             ct = df_s[df_s["model_name"].isin(["Chronos Tiny", "Chronos"])].copy()
-            # in small folder it might just be "Chronos" -> interpret as Tiny
             if not ct.empty:
-                # prefer explicit tiny if present
                 if (df_s["model_name"] == "Chronos Tiny").any():
                     ct = df_s[df_s["model_name"] == "Chronos Tiny"]
                 tiny_mase = float(ct.iloc[0]["MASE"])
@@ -331,7 +314,6 @@ def plot_2_chronos_tiny_vs_base(
         x_order=FREQ_ORDER,
     )
 
-    # runtime plot (only if there is any non-nan)
     if dt["time"].notna().any():
         _grouped_bar(
             data=dt,
@@ -417,15 +399,7 @@ def plot_3_moirai_small_vs_base(
 
 
 def plot_4_base_score_mase_smape(base_by_freq: Dict[str, pd.DataFrame], out_dir: str) -> None:
-    """
-    Composite score (lower=better):
-      For each frequency:
-        - min-max scale MASE across base models
-        - min-max scale sMAPE across base models
-        - score_freq = 0.5*scaled_MASE + 0.5*scaled_sMAPE
-      Overall score per model = mean(score_freq over freqs where model exists)
-    """
-    # build panel: rows = (freq, model) with MASE, sMAPE
+
     panel = []
     for freq, df in base_by_freq.items():
         keep = df[df["model_name"].isin(["TimesFM", "Chronos Base", "Moirai Base", "Chronos", "Moirai"])].copy()
@@ -468,10 +442,8 @@ def plot_4_base_score_mase_smape(base_by_freq: Dict[str, pd.DataFrame], out_dir:
     overall = scores.groupby("model", as_index=False)["score_freq"].mean().rename(columns={"score_freq": "score"})
     overall = overall.sort_values("score", ascending=True).reset_index(drop=True)
 
-    # save table too
     overall.to_csv(os.path.join(out_dir, "04_base_models_composite_score_table.csv"), index=False)
 
-    # bar plot
     plt.figure(figsize=(9, 4.8))
     plt.bar(overall["model"], overall["score"])
     plt.title("(4) Base Modelle â€“ Composite Score (MASE & sMAPE, min-max je Frequenz)")
@@ -481,7 +453,6 @@ def plot_4_base_score_mase_smape(base_by_freq: Dict[str, pd.DataFrame], out_dir:
     plt.savefig(os.path.join(out_dir, "04_base_models_composite_score.png"), dpi=200)
     plt.close()
 
-    # optional: per-freq heatmap-like table plot as image (simple)
     pivot = scores.pivot_table(index="freq", columns="model", values="score_freq", aggfunc="mean")
     pivot = pivot.reindex([f for f in FREQ_ORDER if f in pivot.index] + [f for f in pivot.index if f not in FREQ_ORDER])
 

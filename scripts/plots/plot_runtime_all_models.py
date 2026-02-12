@@ -86,7 +86,6 @@ def _read_results_by_freq(results_root: str) -> Dict[str, pd.DataFrame]:
         df["freq"] = freq
         out[freq] = df
 
-    # keep only known order if possible
     ordered = {}
     for f in FREQ_ORDER:
         if f in out:
@@ -127,17 +126,14 @@ def main() -> None:
     if data.empty:
         raise RuntimeError("No runtime data found.")
 
-    # If model is ambiguous ("Chronos"/"Moirai"), infer by folder origin:
-    # base -> Base, small -> Tiny/Small
+
     data.loc[(data["model"] == "Chronos") & (data["source"] == "base"), "model"] = "Chronos Base"
     data.loc[(data["model"] == "Chronos") & (data["source"] == "small"), "model"] = "Chronos Tiny"
     data.loc[(data["model"] == "Moirai") & (data["source"] == "base"), "model"] = "Moirai Base"
     data.loc[(data["model"] == "Moirai") & (data["source"] == "small"), "model"] = "Moirai Small"
-    # TimesFM only exists in base; keep as is
 
     model_order = ["TimesFM", "Chronos Base", "Moirai Base", "Chronos Tiny", "Moirai Small"]
 
-    # Normalize freq names to Title case to match FREQ_ORDER
     data["freq"] = data["freq"].astype(str).str.strip().str.lower().str.title()
     data["freq"] = pd.Categorical(data["freq"], categories=FREQ_ORDER, ordered=True)
     data["model"] = pd.Categorical(data["model"], categories=model_order, ordered=True)

@@ -1,4 +1,20 @@
-﻿# run_all_m4_uni2ts.py
+﻿# This file integrates multiple pretrained foundation models into a unified M4 evaluation pipeline.
+#
+# TimesFM:
+#   Adapted from the official TimesFM implementation (google-research/timesfm).
+#   License: see model card for google/timesfm-1.0-200m-pytorch
+#
+# Chronos:
+#   Adapted from the official Chronos implementation (amazon-science/chronos-forecasting).
+#   License: see model cards for amazon/chronos-t5-tiny and amazon/chronos-t5-base
+#
+# Moirai:
+#   Adapted from the official Moirai implementation (SalesforceAIResearch/uni2ts).
+#   License: see model cards for Salesforce/moirai-1.0-R-small and Salesforce/moirai-1.0-R-base
+#
+# Modifications: integrated into our unified M4 evaluation pipeline (CPU-only, batching, common forecast interface).
+
+
 from __future__ import annotations
 
 import argparse
